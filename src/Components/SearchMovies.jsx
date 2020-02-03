@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import Movie from './Movie.jsx'
 import axios from 'axios'
+import {didMountURL} from '../config/moviedb.js'
 
 const exampleData = [
   {id: 0, title: "Avengers: Infinity War", overview: "blah blah blah 1"},
@@ -29,7 +30,22 @@ export default class SearchMovies extends React.Component {
 
 
   componentDidMount() {
-    this.getMovies();
+    // this.getMovies();
+    axios.get(didMountURL)
+      .then(res => {
+        const results = res.data.results
+        if (results) {
+          let movie_results = results.map(result => {
+            return this.filterResult(result)
+          })
+        this.setState({movies: movie_results})
+        }
+      })
+      .catch(err => {
+        if (err) {
+          this.setState({movies:{}})
+        }
+      })
   }
 
   filterResult(data) {
