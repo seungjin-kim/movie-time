@@ -70,15 +70,18 @@ export default class SearchMovies extends React.Component {
 
 
 
-
-
-
-
   render () {
 
     return (
-      <Container>
-
+      <Container fluid={true}>
+        <Row className="top-bar" style={{color: 'white', backgroundColor: 'black'}}>
+          <Col>
+          <img width="100" src="moviedb-logo.png"></img>
+          </Col>
+          <Col width>
+            <h2>Movie Time</h2>
+          </Col>
+        </Row>
         <Row className="search">
           <Col sm="12">
             <InputGroup>
