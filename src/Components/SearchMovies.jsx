@@ -23,7 +23,7 @@ export default class SearchMovies extends React.Component {
     super(props);
 
     this.state = {
-      movies: exampleData,
+      movies: [],
     };
 
   }
@@ -93,14 +93,15 @@ export default class SearchMovies extends React.Component {
           </Col>  
         </Row>
 
-        <Row className="content">
+        {/* <Row className="content"> */}
+        
           {this.state.movies.map(movie => 
-            <Col
+            <Row
               key={movie.id}
               className="movie">
               <Movie movie={movie} />
-            </Col>)}
-        </Row>
+            </Row>)}
+        {/* </Row> */}
       </Container>
     );
   }
