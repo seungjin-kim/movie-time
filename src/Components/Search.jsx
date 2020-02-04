@@ -15,11 +15,11 @@ export default class Search extends React.Component {
   render() {
     return (
       <InputGroup>
-        <Input placeholder="Find a movie"/>
+        <Input placeholder="Find a movie" onChange={(e) => this.props.handleSearchInputChange(e)}/>
           <InputGroupAddon addonType="prepend">
             <Button color="success"
-                  className="search-button">
-                    Search
+              className="search-button"> 
+              Search
             </Button>
           </InputGroupAddon>
       </InputGroup>

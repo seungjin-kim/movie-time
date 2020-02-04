@@ -27,22 +27,25 @@ export default class SearchMovies extends React.Component {
 
 
   componentDidMount() {
-    // this.getMovies();
+    this.getTrending()
+  }
+
+  getTrending() {
     axios.get(didMountURL)
-      .then(res => {
-        const results = res.data.results
-        if (results) {
-          let movie_results = results.map(result => {
-            return this.filterResult(result)
-          })
-        this.setState({movies: movie_results})
-        }
-      })
-      .catch(err => {
-        if (err) {
-          this.setState({movies:{}})
-        }
-      })
+    .then(res => {
+      const results = res.data.results
+      if (results) {
+        let movie_results = results.map(result => {
+          return this.filterResult(result)
+        })
+      this.setState({movies: movie_results})
+      }
+    })
+    .catch(err => {
+      if (err) {
+        this.setState({movies:{}})
+      }
+    })
   }
 
   filterResult(data) {
@@ -57,13 +60,34 @@ export default class SearchMovies extends React.Component {
     }
   }
 
-  getMovies() {
-    var options = {
-      key: this.props.API_KEY,
+  onChange(e) {
+    const searchValue = e.target.value;
+    const url = searchURL + searchValue;
+    
+    if (searchValue === '') {
+      this.getTrending()
+      return
     }
 
+    axios.get(url)
+    .then(res => {
+      const results = res.data.results
+      if (results) {
+        let movie_results = results.map(result => {
+          return this.filterResult(result)
+        })
+      this.setState({movies: movie_results})
+      }
+    })
+    .catch(err => {
+      if (err) {
+        this.setState({movies:{}})
+      }
+    })
 
   }
+
+
 
 
 
@@ -75,13 +99,13 @@ export default class SearchMovies extends React.Component {
           <Col xs="4">
           <img width="100" src="moviedb-logo.png"></img>
           </Col>
-          <Col width>
+          <Col>
             <h2>Movie Time</h2>
           </Col>
         </Row>
         <Row className="search">
           <Col>
-            <Search  handleSearchInputChange={(e) => this.onChange(e)}/>
+            <Search handleSearchInputChange={(e) => this.onChange(e)}/>
           </Col>  
         </Row>
 
