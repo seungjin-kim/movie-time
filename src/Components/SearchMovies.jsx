@@ -7,16 +7,13 @@ import {
   InputGroupAddon,
   Row, Col,
   
-
 } from "reactstrap";
 import Movie from './Movie.jsx'
+import Search from './Search.jsx'
 import axios from 'axios'
-import {didMountURL} from '../config/moviedb.js'
+import {didMountURL, searchURL} from '../config/moviedb.js'
 
-const exampleData = [
-  {id: 0, title: "Avengers: Infinity War", overview: "blah blah blah 1"},
-  {id: 1, title: "Bad Boys III", overview: "blah blah blah 2"},
-]
+
 
 export default class SearchMovies extends React.Component {
   constructor(props) {
@@ -75,7 +72,7 @@ export default class SearchMovies extends React.Component {
     return (
       <Container fluid={true}>
         <Row className="top-bar" style={{color: 'white', backgroundColor: 'black'}}>
-          <Col>
+          <Col xs="4">
           <img width="100" src="moviedb-logo.png"></img>
           </Col>
           <Col width>
@@ -83,16 +80,8 @@ export default class SearchMovies extends React.Component {
           </Col>
         </Row>
         <Row className="search">
-          <Col sm="12">
-            <InputGroup>
-              <Input placeholder="Find a movie"/>
-              <InputGroupAddon addonType="prepend">
-                <Button color="success"
-                  className="search-button">
-                    Search
-                </Button>
-              </InputGroupAddon>
-            </InputGroup>
+          <Col>
+            <Search  handleSearchInputChange={(e) => this.onChange(e)}/>
           </Col>  
         </Row>
 
