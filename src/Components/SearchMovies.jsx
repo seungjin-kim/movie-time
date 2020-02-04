@@ -10,6 +10,7 @@ import {
 } from "reactstrap";
 import Movie from './Movie.jsx'
 import Search from './Search.jsx'
+import Topbar from './Topbar.jsx'
 import axios from 'axios'
 import {didMountURL, searchURL} from '../config/moviedb.js'
 
@@ -95,29 +96,22 @@ export default class SearchMovies extends React.Component {
 
     return (
       <Container fluid={true}>
-        <Row className="top-bar" style={{color: 'white', backgroundColor: 'black'}}>
-          <Col xs="4">
-          <img width="100" src="moviedb-logo.png"></img>
-          </Col>
-          <Col>
-            <h2>Movie Time</h2>
-          </Col>
-        </Row>
+
+        <Topbar />
+        
         <Row className="search">
           <Col>
             <Search handleSearchInputChange={(e) => this.onChange(e)}/>
           </Col>  
         </Row>
 
-        {/* <Row className="content"> */}
-        
-          {this.state.movies.map(movie => 
-            <Row
-              key={movie.id}
-              className="movie">
-              <Movie movie={movie} />
-            </Row>)}
-        {/* </Row> */}
+        {this.state.movies.map(movie => 
+          <Row
+            key={movie.id}
+            className="movie">
+            <Movie movie={movie} />
+          </Row>)}
+
       </Container>
     );
   }
