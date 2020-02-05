@@ -15,7 +15,7 @@ import Movie from './Movie.jsx'
 import Search from './Search.jsx'
 import Topbar from './Topbar.jsx'
 import axios from 'axios'
-import {didMountURL, searchURL, tokenURL} from '../config/moviedb.js'
+import {didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
 
 
 
@@ -27,7 +27,8 @@ export default class SearchMovies extends React.Component {
       movies: [],
       token: '',
       askingPermission: false,
-      sessionID: ''
+      sessionId: '',
+      listId: ''
     };
 
   }
@@ -94,7 +95,7 @@ export default class SearchMovies extends React.Component {
   }
 
   
-  getToken(callback) {
+  getToken() {
     let requestSender = Promise.resolve('')
     axios.get(tokenURL)
       .then(res => {
@@ -106,45 +107,45 @@ export default class SearchMovies extends React.Component {
       })
       .then((res) => {
         setTimeout(() => {
-          axios.post(`https://api.themoviedb.org/3/authentication/session/new?api_key=2f7a36cb00abe191c1429ea9f0be3dc7`, {
+          axios.post(authenticateURL, {
             "request_token": this.state.token
           })
-          .then(res => {
-            console.log(res)
-            this.setState({sessionID: res.data.session_id})
-            console.log(this.state)
-          })
-        }, 7000)
+            .then(res => {
+              console.log(res)
+              this.setState({sessionId: res.data.session_id})
+            })
+            .then(() => {
+              this.createList()
+            })
+          }, 7000)
       })
-    
-
-
-
-      
-      
-    
-    // axios.post(`https://api.themoviedb.org/3/authentication/session/new?api_key=2f7a36cb00abe191c1429ea9f0be3dc7`, {
-    //   "request_token": this.state.token
-    // })
-    // .then(res => {
-    //   console.log(res)
-    // })
-
-  
-      
-    
-
-    
-
-      
-
-
-  
-      
-      
-      
   }
 
+  createList() {
+    axios.post(createListURL + this.state.sessionId, {
+      "name": "Watch List",
+      "description": "Saved movies to watch later.",
+      "language": "en"
+    })
+      .then(res => {
+        console.log('list response', res.data.list_id)
+        this.setState({listID: res.data.list_id})
+      })
+  }
+
+
+  
+  // getSavedMovies() {
+  //   axios.get()
+  // }
+
+
+
+      
+
+    
+      
+      
 
   render () {
 
