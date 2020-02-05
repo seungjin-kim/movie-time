@@ -16,7 +16,7 @@ export default class Topbar extends React.Component {
     return (
       <Row className="top-bar" style={{color: 'white', backgroundColor: 'black'}}>
         <Col xs="4">
-          <img width="100" src="moviedb-logo.png"></img>
+          <img width="100" src="/moviedb-logo.png"></img>
         </Col>
 
         <Col>
