@@ -29,13 +29,14 @@ export default class SearchMovies extends React.Component {
       sessionId: '',
       listId: '',
       watchListMovies: [],
+      watchListClicked: false,
     };
 
   }
 
   componentDidMount() {
     this.getTrending()
-    this.setState({listId: Number(localStorage.getItem("listId")) })
+    this.setState({ sessionId: sessionStorage.getItem("sessionId") })
     console.log('storage list id', this.state.listId)
   }
 
@@ -99,10 +100,9 @@ export default class SearchMovies extends React.Component {
   getToken() {
     axios.get(tokenURL)
       .then(res => {
-        this.setState({askingPermission: false, token: res.data.request_token});
+        this.setState({token: res.data.request_token});
       })
       .then(() => {
-        console.log(this.state.token);
         window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
       })
       .then(() => {
@@ -113,26 +113,26 @@ export default class SearchMovies extends React.Component {
             .then(res => {
               console.log(res);
               this.setState({sessionId: res.data.session_id});
+              sessionStorage.setItem('sessionId', res.data.session_id);
             })
-            // .then(() => {
-            //   this.createList();
-            // })
           }, 7000)
       })
   }
 
-
-
   getWatchListMovies() {
+    this.setState({
+      watchListClicked: true
+    });
+    
     if (this.state.sessionId) {
       axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc`)
         .then(res => {
-          const results = res.data.results
+          const results = res.data.results;
           if (results) {
             let movie_results = results.map(result => {
-              return this.filterResult(result)
+              return this.filterResult(result);
             })
-          this.setState({watchListMovies: movie_results})
+          this.setState({watchListMovies: movie_results});
           }
         })
         .catch(err => {
@@ -141,29 +141,67 @@ export default class SearchMovies extends React.Component {
           }
         })
     }
+  }
+  
 
+  addToWatchList(movieId) {
+    if (this.state.sessionId) {
+      axios.post(`${baseURL}/account/{account_id}/watchlist?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}`, {
+        "media_type": "movie",
+        "media_id": movieId,
+        "watchlist": true
+      })
+        .then(res => {
+          console.log(res)
+        })
+    }
+  }
 
+  removeFromWatchList(movieId) {
+    if (this.state.sessionId) {
+      axios.post(`${baseURL}/account/{account_id}/watchlist?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}`, {
+        "media_type": "movie",
+        "media_id": movieId,
+        "watchlist": false
+      })
+        .then(res => {
+          console.log(res)
+        })
+    }
   }
 
 
-
       
-
-    
-  
-
   render () {
 
-
-    const link = `https://www.themoviedb.org/authenticate/${this.state.token}`
 
     return (
       <div>
 
 
-      {this.state.askingPermission ?
+      {this.state.watchListClicked ?
       (
-      <div>hello<a href={link}></a></div>
+      <Container fluid={true}>
+
+        <Topbar />
+        {/* <Button onClick={(e) => this.getToken(e)}>Login</Button>
+        <Button onClick={(e) => this.getWatchListMovies(e)}>Saved Movies</Button> */}
+        {/* <Row className="search">
+          <Col>
+            <Search handleSearchInputChange={(e) => this.onChange(e)}/>
+          </Col>  
+        </Row> */}
+
+        {this.state.watchListMovies.map(movie => 
+          <Row
+            key={movie.id}
+            className="movie">
+            <Movie movie={movie} 
+              removeFromWatchList={(e) => this.removeFromWatchList(e)} 
+              watchListClicked={this.state.watchListClicked} />
+          </Row>)}
+
+      </Container>
       
 
 
@@ -184,7 +222,7 @@ export default class SearchMovies extends React.Component {
           <Row
             key={movie.id}
             className="movie">
-            <Movie movie={movie} />
+            <Movie movie={movie} addToWatchList={(e) => this.addToWatchList(e)} />
           </Row>)}
 
       </Container>)
