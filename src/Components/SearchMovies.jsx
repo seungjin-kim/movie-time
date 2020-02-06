@@ -121,20 +121,6 @@ export default class SearchMovies extends React.Component {
       })
   }
 
-  // createList() {
-  //   if (this.state.listId == false) {
-  //     axios.post(createListURL + this.state.sessionId, {
-  //       "name": "Watch List",
-  //       "description": "Just an awesome list.",
-  //       "language": "en"
-  //     })
-  //       .then(res => {
-  //         console.log('list response', res.data.list_id);
-  //         this.setState({listID: res.data.list_id});
-  //         localStorage.setItem("listId", res.data.list_id)
-  //       })
-  //   }
-  // }
 
 
   // getWatchListMovies() {
