@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   Container,
-  Row,
-  Col,
+  Row, Col,
   Button,
+  Pagination, PaginationItem, PaginationLink
 } from "reactstrap";
 // import {
 //   BrowserRouter as Router,
@@ -18,7 +18,6 @@ import axios from 'axios'
 import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
 
 
-
 export default class SearchMovies extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +29,8 @@ export default class SearchMovies extends React.Component {
       listId: '',
       watchListMovies: [],
       watchListClicked: false,
+      totalPages: 5,
+      pageNum: 1,
     };
 
   }
@@ -37,11 +38,10 @@ export default class SearchMovies extends React.Component {
   componentDidMount() {
     this.getTrending()
     this.setState({ sessionId: sessionStorage.getItem("sessionId") })
-    console.log('storage list id', this.state.listId)
   }
 
   getTrending() {
-    axios.get(didMountURL)
+    axios.get(didMountURL + "&page=" + this.state.pageNum)
       .then(res => {
         const results = res.data.results
         if (results) {
@@ -96,7 +96,6 @@ export default class SearchMovies extends React.Component {
       })
   }
 
-  
   getToken() {
     axios.get(tokenURL)
       .then(res => {
@@ -143,7 +142,6 @@ export default class SearchMovies extends React.Component {
     }
   }
   
-
   addToWatchList(movieId) {
     if (this.state.sessionId) {
       axios.post(`${baseURL}/account/{account_id}/watchlist?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}`, {
@@ -169,13 +167,26 @@ export default class SearchMovies extends React.Component {
         })
     }
     setTimeout(this.getWatchListMovies.bind(this), 10);
-
   }
 
+  handlePageClick(page) {
+    this.setState({
+      pageNum: page
+    }, () => this.getTrending())
+  }
 
       
   render () {
-
+    const pages = [];
+    for (let i = 1; i <= this.state.totalPages; i++) {
+      pages.push(
+        <PaginationItem>
+          <PaginationLink href="" onClick={() => this.handlePageClick(i)}>
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      )
+    }
 
     return (
       <div>
@@ -186,13 +197,6 @@ export default class SearchMovies extends React.Component {
       <Container fluid={true}>
 
         <Topbar />
-        {/* <Button onClick={(e) => this.getToken(e)}>Login</Button>
-        <Button onClick={(e) => this.getWatchListMovies(e)}>Saved Movies</Button> */}
-        {/* <Row className="search">
-          <Col>
-            <Search handleSearchInputChange={(e) => this.onChange(e)}/>
-          </Col>  
-        </Row> */}
 
         {this.state.watchListMovies.map(movie => 
           <Row
@@ -204,12 +208,10 @@ export default class SearchMovies extends React.Component {
           </Row>)}
 
       </Container>
-      
-
-
       )
       :
-      (<Container fluid={true}>
+      (
+      <Container fluid={true}>
 
         <Topbar />
         <Button onClick={(e) => this.getToken(e)}>Login</Button>
@@ -226,8 +228,19 @@ export default class SearchMovies extends React.Component {
             className="movie">
             <Movie movie={movie} addToWatchList={(e) => this.addToWatchList(e)} />
           </Row>)}
+        
+        <Row>
+          <Col>
+            <Pagination size="md" aria-label="Page navigation">
+              {pages}
+            </Pagination>
+          </Col>
+        </Row>
+        
+    
 
-      </Container>)
+      </Container>
+      )
       }
 
 
