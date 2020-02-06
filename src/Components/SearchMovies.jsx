@@ -123,17 +123,6 @@ export default class SearchMovies extends React.Component {
 
 
 
-  // getWatchListMovies() {
-  //   if (this.state.sessionId) {
-  //     axios.get(`https://api.themoviedb.org/3/list/${this.state.listId}?api_key=${MOVIEDB_API_KEY}`)
-  //       .then(res => {
-  //         console.log('gets saved movies', res);
-  //         this.setState({})
-  //       })
-  //   }
-  // }
-
-
   getWatchListMovies() {
     if (this.state.sessionId) {
       axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc`)
