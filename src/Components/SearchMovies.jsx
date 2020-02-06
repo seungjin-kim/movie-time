@@ -168,6 +168,8 @@ export default class SearchMovies extends React.Component {
           console.log(res)
         })
     }
+    setTimeout(this.getWatchListMovies.bind(this), 10);
+
   }
 
 
