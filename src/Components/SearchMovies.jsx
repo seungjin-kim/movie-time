@@ -31,6 +31,7 @@ export default class SearchMovies extends React.Component {
       watchListClicked: false,
       totalPages: 5,
       pageNum: 1,
+      searchTerm: '',
     };
 
   }
@@ -73,6 +74,9 @@ export default class SearchMovies extends React.Component {
   onChange(e) {
     const searchValue = e.target.value;
     const url = searchURL + searchValue;
+    this.setState({
+      searchTerm: searchValue
+    })
     
     if (searchValue === '') {
       this.getTrending()
@@ -229,6 +233,7 @@ export default class SearchMovies extends React.Component {
             <Movie movie={movie} addToWatchList={(e) => this.addToWatchList(e)} />
           </Row>)}
         
+        {this.state.searchTerm == false &&
         <Row>
           <Col>
             <Pagination size="md" aria-label="Page navigation">
@@ -236,6 +241,7 @@ export default class SearchMovies extends React.Component {
             </Pagination>
           </Col>
         </Row>
+        }
         
     
 
