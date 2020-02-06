@@ -15,7 +15,7 @@ import Movie from './Movie.jsx'
 import Search from './Search.jsx'
 import Topbar from './Topbar.jsx'
 import axios from 'axios'
-import {MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
+import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
 
 
 
@@ -26,9 +26,9 @@ export default class SearchMovies extends React.Component {
     this.state = {
       movies: [],
       token: '',
-      askingPermission: false,
       sessionId: '',
-      listId: ''
+      listId: '',
+      watchListMovies: [],
     };
 
   }
@@ -101,11 +101,11 @@ export default class SearchMovies extends React.Component {
       .then(res => {
         this.setState({askingPermission: false, token: res.data.request_token});
       })
-      .then((res) => {
+      .then(() => {
         console.log(this.state.token);
         window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
       })
-      .then((res) => {
+      .then(() => {
         setTimeout(() => {
           axios.post(authenticateURL, {
             "request_token": this.state.token
@@ -114,46 +114,68 @@ export default class SearchMovies extends React.Component {
               console.log(res);
               this.setState({sessionId: res.data.session_id});
             })
-            .then(() => {
-              this.createList();
-            })
+            // .then(() => {
+            //   this.createList();
+            // })
           }, 7000)
       })
   }
 
-  createList() {
-    if (this.state.listId == false) {
-      axios.post(createListURL + this.state.sessionId, {
-        "name": "Watch List",
-        "description": "Just an awesome list dawg.",
-        "language": "en"
-      })
-        .then(res => {
-          console.log('list response', res.data.list_id);
-          this.setState({listID: res.data.list_id});
-          localStorage.setItem("listId", res.data.list_id)
-        })
-    }
-  }
+  // createList() {
+  //   if (this.state.listId == false) {
+  //     axios.post(createListURL + this.state.sessionId, {
+  //       "name": "Watch List",
+  //       "description": "Just an awesome list.",
+  //       "language": "en"
+  //     })
+  //       .then(res => {
+  //         console.log('list response', res.data.list_id);
+  //         this.setState({listID: res.data.list_id});
+  //         localStorage.setItem("listId", res.data.list_id)
+  //       })
+  //   }
+  // }
 
 
-  
-  // getSavedMovies() {
+  // getWatchListMovies() {
   //   if (this.state.sessionId) {
   //     axios.get(`https://api.themoviedb.org/3/list/${this.state.listId}?api_key=${MOVIEDB_API_KEY}`)
   //       .then(res => {
   //         console.log('gets saved movies', res);
+  //         this.setState({})
   //       })
   //   }
   // }
+
+
+  getWatchListMovies() {
+    if (this.state.sessionId) {
+      axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc`)
+        .then(res => {
+          const results = res.data.results
+          if (results) {
+            let movie_results = results.map(result => {
+              return this.filterResult(result)
+            })
+          this.setState({watchListMovies: movie_results})
+          }
+        })
+        .catch(err => {
+          if (err) {
+            this.setState({watchListMovies: {}});
+          }
+        })
+    }
+
+
+  }
 
 
 
       
 
     
-      
-      
+  
 
   render () {
 
@@ -176,7 +198,7 @@ export default class SearchMovies extends React.Component {
 
         <Topbar />
         <Button onClick={(e) => this.getToken(e)}>Login</Button>
-        <Button onClick={(e) => this.getSavedMovies(e)}>Saved Movies</Button>
+        <Button onClick={(e) => this.getWatchListMovies(e)}>Saved Movies</Button>
         <Row className="search">
           <Col>
             <Search handleSearchInputChange={(e) => this.onChange(e)}/>
