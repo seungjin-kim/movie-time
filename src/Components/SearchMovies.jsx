@@ -15,7 +15,7 @@ import Movie from './Movie.jsx'
 import Search from './Search.jsx'
 import Topbar from './Topbar.jsx'
 import axios from 'axios'
-import {didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
+import {MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
 
 
 
@@ -35,6 +35,8 @@ export default class SearchMovies extends React.Component {
 
   componentDidMount() {
     this.getTrending()
+    this.setState({listId: Number(localStorage.getItem("listId")) })
+    console.log('storage list id', this.state.listId)
   }
 
   getTrending() {
@@ -78,32 +80,30 @@ export default class SearchMovies extends React.Component {
 
     axios.get(url)
       .then(res => {
-        console.log(res)
-        const results = res.data.results
+        const results = res.data.results;
         if (results) {
           let movie_results = results.map(result => {
             return this.filterResult(result)
           })
-        this.setState({movies: movie_results})
+        this.setState({movies: movie_results});
         }
       })
       .catch(err => {
         if (err) {
-          this.setState({movies: {}})
+          this.setState({movies: {}});
         }
       })
   }
 
   
   getToken() {
-    let requestSender = Promise.resolve('')
     axios.get(tokenURL)
       .then(res => {
-        this.setState({askingPermission: false, token: res.data.request_token})
+        this.setState({askingPermission: false, token: res.data.request_token});
       })
       .then((res) => {
-        console.log(this.state.token)
-        window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`)
+        console.log(this.state.token);
+        window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
       })
       .then((res) => {
         setTimeout(() => {
@@ -111,32 +111,40 @@ export default class SearchMovies extends React.Component {
             "request_token": this.state.token
           })
             .then(res => {
-              console.log(res)
-              this.setState({sessionId: res.data.session_id})
+              console.log(res);
+              this.setState({sessionId: res.data.session_id});
             })
             .then(() => {
-              this.createList()
+              this.createList();
             })
           }, 7000)
       })
   }
 
   createList() {
-    axios.post(createListURL + this.state.sessionId, {
-      "name": "Watch List",
-      "description": "Saved movies to watch later.",
-      "language": "en"
-    })
-      .then(res => {
-        console.log('list response', res.data.list_id)
-        this.setState({listID: res.data.list_id})
+    if (this.state.listId == false) {
+      axios.post(createListURL + this.state.sessionId, {
+        "name": "Watch List",
+        "description": "Just an awesome list dawg.",
+        "language": "en"
       })
+        .then(res => {
+          console.log('list response', res.data.list_id);
+          this.setState({listID: res.data.list_id});
+          localStorage.setItem("listId", res.data.list_id)
+        })
+    }
   }
 
 
   
   // getSavedMovies() {
-  //   axios.get()
+  //   if (this.state.sessionId) {
+  //     axios.get(`https://api.themoviedb.org/3/list/${this.state.listId}?api_key=${MOVIEDB_API_KEY}`)
+  //       .then(res => {
+  //         console.log('gets saved movies', res);
+  //       })
+  //   }
   // }
 
 
