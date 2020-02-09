@@ -38,11 +38,17 @@ export default class SearchMovies extends React.Component {
 
   componentDidMount() {
     this.getTrending()
+
     this.setState({
       sessionId: sessionStorage.getItem("sessionId"),
       pageNum: 1,
       totalPages: 5
     })
+
+    if (this.state.token != false && this.state.sessionId == false) {
+      setInterval(this.getSessionId, 5000)
+    }
+
   }
 
   getTrending() {
@@ -104,7 +110,7 @@ export default class SearchMovies extends React.Component {
       })
   }
 
-  getToken() {
+  handleLogin() {
     axios.get(tokenURL)
       .then(res => {
         this.setState({token: res.data.request_token});
@@ -112,17 +118,28 @@ export default class SearchMovies extends React.Component {
       .then(() => {
         window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
       })
-      .then(() => {
-        setTimeout(() => {
-          axios.post(authenticateURL, {
-            "request_token": this.state.token
-          })
-            .then(res => {
-              console.log(res);
-              this.setState({sessionId: res.data.session_id});
-              sessionStorage.setItem('sessionId', res.data.session_id);
-            })
-          }, 7000)
+      // .then(() => {
+      //   setTimeout(() => {
+      //     axios.post(authenticateURL, {
+      //       "request_token": this.state.token
+      //     })
+      //       .then(res => {
+      //         console.log(res);
+      //         this.setState({sessionId: res.data.session_id});
+      //         sessionStorage.setItem('sessionId', res.data.session_id);
+      //       })
+      //     }, 7000)
+      // })
+  }
+
+  getSessionId() {
+    axios.post(authenticateURL, {
+      "request_token": this.state.token
+    })
+      .then(res => {
+        console.log(res);
+        this.setState({sessionId: res.data.session_id});
+        sessionStorage.setItem('sessionId', res.data.session_id);
       })
   }
 
@@ -189,7 +206,8 @@ export default class SearchMovies extends React.Component {
 
   logOut() {
     this.setState({
-      sessionId: ''
+      sessionId: '',
+      token: '',
     }, () => this.componentDidMount())
   }
 
@@ -241,7 +259,7 @@ export default class SearchMovies extends React.Component {
       <Container fluid={true}>
 
         <Topbar />
-        <Button onClick={(e) => this.getToken(e)}>Login</Button>
+        <Button onClick={(e) => this.handleLogin(e)}>Login</Button>
         <Button onClick={(e) => this.getWatchListMovies(e)}>Saved Movies</Button>
         <Row className="search">
           <Col>
