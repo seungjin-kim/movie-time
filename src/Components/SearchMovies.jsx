@@ -26,7 +26,6 @@ export default class SearchMovies extends React.Component {
       movies: [],
       token: '',
       sessionId: '',
-      listId: '',
       watchListMovies: [],
       watchListClicked: false,
       totalPages: 5,
@@ -38,17 +37,26 @@ export default class SearchMovies extends React.Component {
 
   componentDidMount() {
     this.getTrending()
-
-    this.setState({
-      sessionId: sessionStorage.getItem("sessionId"),
-      pageNum: 1,
-      totalPages: 5
-    })
-
-    if (this.state.token != false && this.state.sessionId == false) {
-      setInterval(this.getSessionId, 5000)
+    const storedSessionId = sessionStorage.getItem("sessionId")
+    
+    if (storedSessionId && storedSessionId !== "undefined") {
+      this.setState({
+        sessionId: storedSessionId,
+        pageNum: 1,
+        totalPages: 5
+      }, () => this.callGetSessionId())
+    } else {
+      this.setState({
+        pageNum: 1,
+        totalPages: 5
+      }, () => this.callGetSessionId())
     }
+  }
 
+  callGetSessionId() {
+    if (this.state.token != "" && this.state.sessionId === '') {
+      setInterval(() => this.getSessionId(), 4000)
+    }
   }
 
   getTrending() {
@@ -113,7 +121,9 @@ export default class SearchMovies extends React.Component {
   handleLogin() {
     axios.get(tokenURL)
       .then(res => {
-        this.setState({token: res.data.request_token});
+        this.setState({
+          token: res.data.request_token
+        }, () => this.componentDidMount());
       })
       .then(() => {
         window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
@@ -133,22 +143,32 @@ export default class SearchMovies extends React.Component {
   }
 
   getSessionId() {
-    axios.post(authenticateURL, {
-      "request_token": this.state.token
-    })
-      .then(res => {
-        console.log(res);
-        this.setState({sessionId: res.data.session_id});
-        sessionStorage.setItem('sessionId', res.data.session_id);
+    if (this.state.token != "" && this.state.sessionId === '') {
+      axios.post(authenticateURL, {
+        "request_token": this.state.token
       })
+        .then(res => {
+          console.log(res);
+          this.setState({sessionId: res.data.session_id});
+          sessionStorage.setItem('sessionId', res.data.session_id);
+        })
+        .catch(err => {
+          if (err) {
+            this.setState({sessionId:""})
+          }
+        })
+    } else {
+      return
+    }
   }
 
   getWatchListMovies() {
-    this.setState({
-      watchListClicked: true
-    });
     
     if (this.state.sessionId) {
+      this.setState({
+        watchListClicked: true
+      });
+      
       axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc` + "&page=" + this.state.pageNum)
         .then(res => {
           const results = res.data.results;
@@ -228,7 +248,7 @@ export default class SearchMovies extends React.Component {
       <div>
 
 
-      {this.state.watchListClicked ?
+      {this.state.watchListClicked && this.state.sessionId ?
       (
       <Container fluid={true}>
 
@@ -250,7 +270,6 @@ export default class SearchMovies extends React.Component {
             </Pagination>
           </Col>
         </Row>
-
 
       </Container>
       )
@@ -284,8 +303,7 @@ export default class SearchMovies extends React.Component {
         </Row>
         }
         
-    
-
+  
       </Container>
       )
       }
