@@ -187,6 +187,12 @@ export default class SearchMovies extends React.Component {
     }, () => this.getTrending())
   }
 
+  logOut() {
+    this.setState({
+      sessionId: ''
+    }, () => this.componentDidMount())
+  }
+
       
   render () {
     const pages = [];
