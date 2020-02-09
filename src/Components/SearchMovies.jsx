@@ -28,7 +28,7 @@ export default class SearchMovies extends React.Component {
       sessionId: '',
       watchListMovies: [],
       watchListClicked: false,
-      totalPages: 5,
+      totalPages: 0,
       pageNum: 1,
       searchTerm: '',
     };
@@ -43,12 +43,10 @@ export default class SearchMovies extends React.Component {
       this.setState({
         sessionId: storedSessionId,
         pageNum: 1,
-        totalPages: 5
       }, () => this.callGetSessionId())
     } else {
       this.setState({
         pageNum: 1,
-        totalPages: 5
       }, () => this.callGetSessionId())
     }
   }
@@ -67,7 +65,10 @@ export default class SearchMovies extends React.Component {
           let movie_results = results.map(result => {
             return this.filterResult(result)
           })
-        this.setState({movies: movie_results})
+        this.setState({
+          movies: movie_results,
+          totalPages: 5
+        })
         }
       })
       .catch(err => {
@@ -166,7 +167,8 @@ export default class SearchMovies extends React.Component {
     
     if (this.state.sessionId) {
       this.setState({
-        watchListClicked: true
+        watchListClicked: true,
+        totalPages: 0
       });
       
       axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc` + "&page=" + this.state.pageNum)
