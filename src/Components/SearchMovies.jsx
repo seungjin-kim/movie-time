@@ -129,18 +129,6 @@ export default class SearchMovies extends React.Component {
       .then(() => {
         window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
       })
-      // .then(() => {
-      //   setTimeout(() => {
-      //     axios.post(authenticateURL, {
-      //       "request_token": this.state.token
-      //     })
-      //       .then(res => {
-      //         console.log(res);
-      //         this.setState({sessionId: res.data.session_id});
-      //         sessionStorage.setItem('sessionId', res.data.session_id);
-      //       })
-      //     }, 7000)
-      // })
   }
 
   getSessionId() {
@@ -155,16 +143,15 @@ export default class SearchMovies extends React.Component {
         })
         .catch(err => {
           if (err) {
-            this.setState({sessionId:""})
+            this.setState({sessionId:""});
           }
         })
     } else {
-      return
+      return;
     }
   }
 
   getWatchListMovies() {
-    
     if (this.state.sessionId) {
       this.setState({
         watchListClicked: true,
@@ -187,9 +174,14 @@ export default class SearchMovies extends React.Component {
         })
         .catch(err => {
           if (err) {
-            this.setState({watchListMovies: {}});
+            this.setState({
+              watchListMovies: {},
+              sessionId: '',
+            });
           }
         })
+    } else {
+      alert('Please sign in using a TMDB account to view your watchlist.');
     }
   }
   
@@ -200,9 +192,18 @@ export default class SearchMovies extends React.Component {
         "media_id": movieId,
         "watchlist": true
       })
-        .then(res => {
-          console.log(res)
+        // .then(res => {
+        //   console.log(res)
+        // })
+        .catch(err => {
+          if (err) {
+            this.setState({
+              sessionId: '',
+            });
+          }
         })
+    } else {
+      alert("Please sign in using a TMDB account to add movies to your watchlist.")
     }
   }
 
@@ -213,9 +214,9 @@ export default class SearchMovies extends React.Component {
         "media_id": movieId,
         "watchlist": false
       })
-        .then(res => {
-          console.log(res)
-        })
+        // .then(res => {
+        //   console.log(res)
+        // })
     }
     setTimeout(this.getWatchListMovies.bind(this), 10);
   }
