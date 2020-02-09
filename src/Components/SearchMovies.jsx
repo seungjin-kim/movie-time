@@ -38,7 +38,11 @@ export default class SearchMovies extends React.Component {
 
   componentDidMount() {
     this.getTrending()
-    this.setState({ sessionId: sessionStorage.getItem("sessionId") })
+    this.setState({
+      sessionId: sessionStorage.getItem("sessionId"),
+      pageNum: 1,
+      totalPages: 5
+    })
   }
 
   getTrending() {
@@ -128,14 +132,18 @@ export default class SearchMovies extends React.Component {
     });
     
     if (this.state.sessionId) {
-      axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc`)
+      axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc` + "&page=" + this.state.pageNum)
         .then(res => {
           const results = res.data.results;
           if (results) {
             let movie_results = results.map(result => {
               return this.filterResult(result);
             })
-          this.setState({watchListMovies: movie_results});
+            console.log(movie_results);
+          this.setState({
+            watchListMovies: movie_results,
+            totalPages: res.data.total_pages,
+          });
           }
         })
         .catch(err => {
@@ -210,6 +218,15 @@ export default class SearchMovies extends React.Component {
               removeFromWatchList={(e) => this.removeFromWatchList(e)} 
               watchListClicked={this.state.watchListClicked} />
           </Row>)}
+        
+        <Row>
+          <Col>
+            <Pagination size="md" aria-label="Page navigation">
+              {pages}
+            </Pagination>
+          </Col>
+        </Row>
+
 
       </Container>
       )
