@@ -15,7 +15,7 @@ export default class Movie extends React.Component {
     return (
       <Container>
         <Row>
-          <Col>
+          <Col >
             <img alt="poster" src={`https://image.tmdb.org/t/p/w200/${this.props.movie.poster}`} />
           </Col>
 
@@ -26,10 +26,17 @@ export default class Movie extends React.Component {
                 <p> Rating: {this.props.movie.rating} </p>
                 <p> {this.props.movie.overview} </p>
                 <p> Release Date: {this.props.movie.released} </p>
+                {/* {this.props.watchListClicked ? (
+                  <Button onClick={() => this.props.removeFromWatchList(this.props.movie.id)}>Remove</Button>
+                ) : (
+                  <Button onClick={() => this.props.addToWatchList(this.props.movie.id)}>Add</Button>
+                )} */}
               </div>
             </div>
           </Col>
-          <Col>
+          <Col xs="3" style={{
+            alignItems: 'center'
+          }}>
             {this.props.watchListClicked ? (
               <Button onClick={() => this.props.removeFromWatchList(this.props.movie.id)}>Remove</Button>
             ) : (
