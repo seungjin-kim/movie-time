@@ -297,15 +297,11 @@ export default class SearchMovies extends React.Component {
           </Row>)}
         
         {this.state.searchTerm == false &&
-        <Row style={{
-
-        }}>
-          <Col style={{
-            alignContent: 'center',
-            margin: '40px'
-          }}>
+        <Row>
+          <Col>
             <Pagination size="md" aria-label="Page navigation" style={{
-              justifyContent: 'center'
+              justifyContent: 'center',
+              margin: '40px'
             }}>
               {pages}
             </Pagination>

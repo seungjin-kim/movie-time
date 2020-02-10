@@ -32,7 +32,6 @@ export default class Topbar extends React.Component {
 
         <Col xs={{size: 'auto'}}>
           <h2 style={{
-            // margin: '25px 500px 25px 0px',
             // textAlign: 'left',
             fontFamily: "'Source Sans Pro', Arial, sans-serif",
             fontWeight: "900",
