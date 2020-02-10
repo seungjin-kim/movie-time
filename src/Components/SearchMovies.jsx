@@ -5,16 +5,12 @@ import {
   Button,
   Pagination, PaginationItem, PaginationLink
 } from "reactstrap";
-// import {
-//   BrowserRouter as Router,
-//   Switch,
-//   Route,
-//   Link
-// } from "react-router-dom";
 import Movie from './Movie.jsx'
 import Search from './Search.jsx'
 import Topbar from './Topbar.jsx'
+import Navigation from './Navigation.jsx'
 import axios from 'axios'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
 
 
@@ -257,6 +253,8 @@ export default class SearchMovies extends React.Component {
 
         <Topbar />
 
+        <Navigation />
+
         {this.state.watchListMovies.map(movie => 
           <Row
             key={movie.id}
@@ -280,7 +278,8 @@ export default class SearchMovies extends React.Component {
       (
       <Container fluid={true}>
 
-        <Topbar />
+        {/* <Topbar /> */}
+        <Navigation />
         <Button onClick={(e) => this.handleLogin(e)}>Login</Button>
         <Button onClick={(e) => this.getWatchListMovies(e)}>Saved Movies</Button>
         <Row className="search">

@@ -1,10 +1,5 @@
 import React from 'react';
 import {
-  Container,
-  Button,
-  Input,
-  InputGroup,
-  InputGroupAddon,
   Row, Col,
   
 } from "reactstrap";
@@ -22,12 +17,7 @@ export default class Topbar extends React.Component {
           alignItems: 'center'
           }}>
         <Col xs="4">
-          <img width="100" src="/moviedb-logo.png" style={{
-            
-
-
-            
-          }}></img>
+          <img width="100" src="/moviedb-logo.png"></img>
         </Col>
 
         <Col xs={{size: 'auto'}}>
