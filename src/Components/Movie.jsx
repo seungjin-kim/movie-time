@@ -16,31 +16,41 @@ export default class Movie extends React.Component {
       <Container style={{
       }}>
         <Row style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          // display: "flex",
+          // justifyContent: "center",
+          // alignItems: "center",
         }}>
           <Col style={{
-
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "left",
           }}>
-            <img alt="poster" src={`https://image.tmdb.org/t/p/w200/${this.props.movie.poster}`} />
+            <img alt="poster" src={`https://image.tmdb.org/t/p/w200/${this.props.movie.poster}`} style={{
+              borderRadius: '12px',
+            }}/>
           </Col>
 
-          <Col style={{
+          <Col xs="7" style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}>
             <div className="movie-entry media">
               <div className="media-body">
-                <h5>{this.props.movie.title}</h5>
-                <p> Rating: {this.props.movie.rating} </p>
+                <h5 style={{
+                  fontWeight: '750'
+                }}>{this.props.movie.title}</h5>
+                <p style={{
+                  fontStyle: 'italic'
+                }}> Rating: {this.props.movie.rating} </p>
                 <p> {this.props.movie.overview} </p>
-                <p> Release Date: {this.props.movie.released} </p>
+                <p style={{
+                  fontStyle: 'italic'
+                }}> Release Date: {this.props.movie.released} </p>
               </div>
             </div>
           </Col>
-          <Col xs="3" style={{
+          <Col xs="2" style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

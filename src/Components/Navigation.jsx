@@ -16,7 +16,7 @@ const Navigation = (props) => {
           alignItems: "center",
           fontFamily: "'Source Sans Pro', Arial, sans-serif",
           fontWeight: "900",
-          fontSize: "35px",
+          fontSize: "40px",
           color: '#00D573'
         }}>Movie Time</NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" />

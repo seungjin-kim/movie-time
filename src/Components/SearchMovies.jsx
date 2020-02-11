@@ -211,11 +211,8 @@ export default class SearchMovies extends React.Component {
         "media_id": movieId,
         "watchlist": false
       })
-        // .then(res => {
-        //   console.log(res)
-        // })
     }
-    setTimeout(this.getWatchListMovies.bind(this), 10);
+    setTimeout(this.getWatchListMovies.bind(this), 80);
   }
 
   handlePageClick(page) {
@@ -279,7 +276,10 @@ export default class SearchMovies extends React.Component {
         {this.state.watchListMovies.map(movie => 
           <Row
             key={movie.id}
-            className="movie">
+            className="movie"
+            style={{
+              marginBottom: '35px',
+            }}>
             <Movie movie={movie} 
               removeFromWatchList={(e) => this.removeFromWatchList(e)} 
               watchListClicked={this.state.watchListClicked} />
@@ -300,7 +300,9 @@ export default class SearchMovies extends React.Component {
       )
       :
       (
-      <Container fluid={true}>
+      <Container fluid={true} style={{
+        
+      }}>
 
         <Navigation 
           handleLogin={(e) => this.handleLogin(e)}
@@ -326,7 +328,9 @@ export default class SearchMovies extends React.Component {
         {this.state.movies.map(movie => 
           <Row
             key={movie.id}
-            className="movie">
+            className="movie" style={{
+              marginBottom: '35px',
+            }}>
             <Movie movie={movie} addToWatchList={(e) => this.addToWatchList(e)} />
           </Row>)}
         
