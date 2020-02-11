@@ -8,7 +8,6 @@ import {
 import Movie from './Movie.jsx'
 import Search from './Search.jsx'
 import Navigation from './Navigation.jsx'
-import NavigationSecondary from './NavigationSecondary.jsx'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
@@ -246,6 +245,15 @@ export default class SearchMovies extends React.Component {
       )
     }
 
+    let homeHeader
+    if (this.state.searchTerm.length > 0) {
+      homeHeader = "Search Results"
+    } else {
+      homeHeader = "Popular Movies - Top 100"
+    }
+
+
+
     return (
       <div>
 
@@ -261,6 +269,12 @@ export default class SearchMovies extends React.Component {
           watchListClicked={this.state.watchListClicked}
           componentDidMount={(e) => this.componentDidMount(e)}
            />
+
+        <h4 style={{
+          textDecoration: 'underline',
+          marginTop: '20px',
+          marginBottom: '50px'
+        }}>Watchlist</h4>
 
         {this.state.watchListMovies.map(movie => 
           <Row
@@ -300,6 +314,14 @@ export default class SearchMovies extends React.Component {
             <Search handleSearchInputChange={(e) => this.onChange(e)}/>
           </Col>  
         </Row>
+
+        <h4 style={{
+          textDecoration: 'underline',
+          marginTop: '20px',
+          marginBottom: '50px'
+        }}>
+        {homeHeader}
+        </h4>
 
         {this.state.movies.map(movie => 
           <Row

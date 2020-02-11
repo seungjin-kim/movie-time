@@ -15,8 +15,14 @@ export default class Movie extends React.Component {
     return (
       <Container style={{
       }}>
-        <Row>
-          <Col>
+        <Row style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          <Col style={{
+
+          }}>
             <img alt="poster" src={`https://image.tmdb.org/t/p/w200/${this.props.movie.poster}`} />
           </Col>
 
@@ -27,7 +33,7 @@ export default class Movie extends React.Component {
           }}>
             <div className="movie-entry media">
               <div className="media-body">
-                <h4>{this.props.movie.title}</h4>
+                <h5>{this.props.movie.title}</h5>
                 <p> Rating: {this.props.movie.rating} </p>
                 <p> {this.props.movie.overview} </p>
                 <p> Release Date: {this.props.movie.released} </p>

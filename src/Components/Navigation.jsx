@@ -9,14 +9,15 @@ const Navigation = (props) => {
   return (
     <div>
       <Navbar color="faded" light>
-        <img width="60" src="/moviedb-logo.png"></img>
+        <img width="70" src="/moviedb-logo.png"></img>
         <NavbarBrand href="/" style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           fontFamily: "'Source Sans Pro', Arial, sans-serif",
           fontWeight: "900",
-          fontSize: "35px"
+          fontSize: "35px",
+          color: '#00D573'
         }}>Movie Time</NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" />
         <Collapse isOpen={!collapsed} navbar>
@@ -49,11 +50,6 @@ const Navigation = (props) => {
                     <div></div>
                   )}
             </NavItem>
-  
-
-            {/* <NavItem>
-              <NavLink href="">GitHub</NavLink>
-            </NavItem> */}
           </Nav>
         </Collapse>
       </Navbar>
