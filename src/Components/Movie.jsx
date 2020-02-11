@@ -15,11 +15,7 @@ export default class Movie extends React.Component {
     return (
       <Container style={{
       }}>
-        <Row style={{
-          // display: "flex",
-          // justifyContent: "center",
-          // alignItems: "center",
-        }}>
+        <Row>
           <Col style={{
             display: "flex",
             justifyContent: "left",
@@ -36,14 +32,18 @@ export default class Movie extends React.Component {
             alignItems: "center",
           }}>
             <div className="movie-entry media">
-              <div className="media-body">
+              <div className="media-body" style={{
+                textAlign: "left"
+              }}>
                 <h5 style={{
                   fontWeight: '750'
                 }}>{this.props.movie.title}</h5>
                 <p style={{
                   fontStyle: 'italic'
                 }}> Rating: {this.props.movie.rating} </p>
-                <p> {this.props.movie.overview} </p>
+                <p style={{
+                  textAlign: "left"
+                }}> {this.props.movie.overview} </p>
                 <p style={{
                   fontStyle: 'italic'
                 }}> Release Date: {this.props.movie.released} </p>
@@ -64,17 +64,13 @@ export default class Movie extends React.Component {
                 verticalAlign: 'middle'
               }}>Add</Button>
             )}
-            
           </Col>
 
         </Row>
 
       </Container>
-
     )
   }
-
-
 }
 
 

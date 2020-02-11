@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink} from 'reactstrap';
 
 const Navigation = (props) => {
   const [collapsed, setCollapsed] = useState(true);
@@ -9,7 +9,7 @@ const Navigation = (props) => {
   return (
     <div>
       <Navbar color="faded" light>
-        <img width="70" src="/moviedb-logo.png"></img>
+        <img alt="" width="70" src="/moviedb-logo.png"></img>
         <NavbarBrand href="/" style={{
           display: "flex",
           justifyContent: "center",
@@ -26,7 +26,7 @@ const Navigation = (props) => {
               {props.sessionId ? (
                 <div></div>
               ) : (
-                <NavLink href="JavaScript:Void(0)" onClick={(e) => props.handleLogin(e)}>Login</NavLink>
+                <NavLink href="#" onClick={(e) => props.handleLogin(e)}>Login</NavLink>
               )}
             </NavItem>
             <NavItem>
@@ -40,7 +40,7 @@ const Navigation = (props) => {
               {props.watchListClicked ? (
                 <div></div>
               ) : (
-                <NavLink href="JavaScript:Void(0)" onClick={(e) => props.getWatchListMovies(e)}> Watchlist </NavLink>
+                <NavLink href="#" onClick={(e) => props.getWatchListMovies(e)}> Watchlist </NavLink>
               )}
             </NavItem>
             <NavItem>

@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Container,
   Row, Col,
-  Button,
   Pagination, PaginationItem, PaginationLink
 } from "reactstrap";
 import Movie from './Movie.jsx'
@@ -10,7 +9,7 @@ import Search from './Search.jsx'
 import Navigation from './Navigation.jsx'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
+import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL} from '../config/moviedb.js'
 
 
 export default class SearchMovies extends React.Component {
@@ -49,7 +48,7 @@ export default class SearchMovies extends React.Component {
   }
 
   callGetSessionId() {
-    if (this.state.token != "" && this.state.sessionId === '') {
+    if (this.state.token !== "" && this.state.sessionId === '') {
       setInterval(() => this.getSessionId(), 3000)
     }
   }
@@ -123,18 +122,22 @@ export default class SearchMovies extends React.Component {
           token: res.data.request_token
         }, () => this.componentDidMount());
       })
+      .catch(err => {
+        if (err) {
+          this.setState({token: ''});
+        }
+      })
       .then(() => {
         window.open(`https://www.themoviedb.org/authenticate/${this.state.token}`);
       })
   }
 
   getSessionId() {
-    if (this.state.token != "" && this.state.sessionId === '') {
+    if (this.state.token !== "" && this.state.sessionId === '') {
       axios.post(authenticateURL, {
         "request_token": this.state.token
       })
         .then(res => {
-          console.log(res);
           this.setState({sessionId: res.data.session_id});
           sessionStorage.setItem('sessionId', res.data.session_id);
         })
@@ -155,14 +158,13 @@ export default class SearchMovies extends React.Component {
         totalPages: 0
       });
       
-      axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc` + "&page=" + this.state.pageNum)
+      axios.get(`${baseURL}/account/{account_id}/watchlist/movies?api_key=${MOVIEDB_API_KEY}&session_id=${this.state.sessionId}&sort_by=created_at.desc&page=` + this.state.pageNum)
         .then(res => {
           const results = res.data.results;
           if (results) {
             let movie_results = results.map(result => {
               return this.filterResult(result);
             })
-            console.log(movie_results);
           this.setState({
             watchListMovies: movie_results,
             totalPages: res.data.total_pages,
@@ -189,9 +191,6 @@ export default class SearchMovies extends React.Component {
         "media_id": movieId,
         "watchlist": true
       })
-        // .then(res => {
-        //   console.log(res)
-        // })
         .catch(err => {
           if (err) {
             this.setState({
@@ -210,6 +209,11 @@ export default class SearchMovies extends React.Component {
         "media_type": "movie",
         "media_id": movieId,
         "watchlist": false
+      })
+      .catch(err => {
+        if (err) {
+          console.log(err)
+        }
       })
     }
     setTimeout(this.getWatchListMovies.bind(this), 80);
@@ -234,7 +238,7 @@ export default class SearchMovies extends React.Component {
     const pages = [];
     for (let i = 1; i <= this.state.totalPages; i++) {
       pages.push(
-        <PaginationItem>
+        <PaginationItem key={i}>
           <PaginationLink href="" onClick={() => this.handlePageClick(i)}>
             {i}
           </PaginationLink>
@@ -334,7 +338,7 @@ export default class SearchMovies extends React.Component {
             <Movie movie={movie} addToWatchList={(e) => this.addToWatchList(e)} />
           </Row>)}
         
-        {this.state.searchTerm == false &&
+        {this.state.searchTerm === false &&
         <Row>
           <Col>
             <Pagination size="md" aria-label="Page navigation" style={{
