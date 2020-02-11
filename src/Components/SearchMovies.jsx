@@ -7,8 +7,8 @@ import {
 } from "reactstrap";
 import Movie from './Movie.jsx'
 import Search from './Search.jsx'
-import Topbar from './Topbar.jsx'
 import Navigation from './Navigation.jsx'
+import NavigationSecondary from './NavigationSecondary.jsx'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {baseURL, MOVIEDB_API_KEY, didMountURL, searchURL, tokenURL, authenticateURL, createListURL} from '../config/moviedb.js'
@@ -43,13 +43,15 @@ export default class SearchMovies extends React.Component {
     } else {
       this.setState({
         pageNum: 1,
+        watchListClicked: false,
+        searchTerm: ''
       }, () => this.callGetSessionId())
     }
   }
 
   callGetSessionId() {
     if (this.state.token != "" && this.state.sessionId === '') {
-      setInterval(() => this.getSessionId(), 4000)
+      setInterval(() => this.getSessionId(), 3000)
     }
   }
 
@@ -223,7 +225,8 @@ export default class SearchMovies extends React.Component {
     }, () => this.getTrending())
   }
 
-  logOut() {
+  handleLogout() {
+    sessionStorage.removeItem("sessionId")
     this.setState({
       sessionId: '',
       token: '',
@@ -251,9 +254,13 @@ export default class SearchMovies extends React.Component {
       (
       <Container fluid={true}>
 
-        <Topbar />
-
-        <Navigation />
+        <Navigation
+          handleLogin={(e) => this.handleLogin(e)} 
+          handleLogout={(e) => this.handleLogout(e)}
+          sessionId={this.state.sessionId}
+          watchListClicked={this.state.watchListClicked}
+          componentDidMount={(e) => this.componentDidMount(e)}
+           />
 
         {this.state.watchListMovies.map(movie => 
           <Row
@@ -266,7 +273,10 @@ export default class SearchMovies extends React.Component {
         
         <Row>
           <Col>
-            <Pagination size="md" aria-label="Page navigation">
+            <Pagination size="md" aria-label="Page navigation" style={{
+              justifyContent: 'center',
+              margin: '45px'
+            }}>
               {pages}
             </Pagination>
           </Col>
@@ -278,10 +288,13 @@ export default class SearchMovies extends React.Component {
       (
       <Container fluid={true}>
 
-        {/* <Topbar /> */}
-        <Navigation />
-        <Button onClick={(e) => this.handleLogin(e)}>Login</Button>
-        <Button onClick={(e) => this.getWatchListMovies(e)}>Saved Movies</Button>
+        <Navigation 
+          handleLogin={(e) => this.handleLogin(e)}
+          handleLogout={(e) => this.handleLogout(e)}
+          getWatchListMovies={(e) => this.getWatchListMovies(e)}
+          sessionId={this.state.sessionId}
+          watchListClicked={this.state.watchListClicked} />
+          
         <Row className="search">
           <Col>
             <Search handleSearchInputChange={(e) => this.onChange(e)}/>
@@ -300,7 +313,7 @@ export default class SearchMovies extends React.Component {
           <Col>
             <Pagination size="md" aria-label="Page navigation" style={{
               justifyContent: 'center',
-              margin: '40px'
+              margin: '45px'
             }}>
               {pages}
             </Pagination>
