@@ -33,7 +33,7 @@ export default class SearchMovies extends React.Component {
     this.getTrending()
     const storedSessionId = sessionStorage.getItem("sessionId")
     
-    if (storedSessionId && storedSessionId !== "undefined") {
+    if (storedSessionId && storedSessionId != "undefined") {
       this.setState({
         sessionId: storedSessionId,
         pageNum: 1,
@@ -48,7 +48,7 @@ export default class SearchMovies extends React.Component {
   }
 
   callGetSessionId() {
-    if (this.state.token !== "" && this.state.sessionId === '') {
+    if (this.state.token != "" && this.state.sessionId == '') {
       setInterval(() => this.getSessionId(), 3000)
     }
   }
@@ -93,7 +93,7 @@ export default class SearchMovies extends React.Component {
       searchTerm: searchValue
     })
     
-    if (searchValue === '') {
+    if (searchValue == '') {
       this.getTrending()
       return
     }
@@ -133,7 +133,7 @@ export default class SearchMovies extends React.Component {
   }
 
   getSessionId() {
-    if (this.state.token !== "" && this.state.sessionId === '') {
+    if (this.state.token != "" && this.state.sessionId == '') {
       axios.post(authenticateURL, {
         "request_token": this.state.token
       })
@@ -246,6 +246,7 @@ export default class SearchMovies extends React.Component {
       )
     }
 
+
     let homeHeader
     if (this.state.searchTerm.length > 0) {
       homeHeader = "Search Results"
@@ -274,7 +275,9 @@ export default class SearchMovies extends React.Component {
         <h4 style={{
           textDecoration: 'underline',
           marginTop: '20px',
-          marginBottom: '50px'
+          marginBottom: '50px',
+          textAlign: 'left',
+          textIndent: '10%'
         }}>Watchlist</h4>
 
         {this.state.watchListMovies.map(movie => 
@@ -324,7 +327,9 @@ export default class SearchMovies extends React.Component {
         <h4 style={{
           textDecoration: 'underline',
           marginTop: '20px',
-          marginBottom: '50px'
+          marginBottom: '50px',
+          textAlign: 'left',
+          textIndent: '10%'
         }}>
         {homeHeader}
         </h4>
@@ -338,7 +343,7 @@ export default class SearchMovies extends React.Component {
             <Movie movie={movie} addToWatchList={(e) => this.addToWatchList(e)} />
           </Row>)}
         
-        {this.state.searchTerm === false &&
+        {this.state.searchTerm.length == 0 &&
         <Row>
           <Col>
             <Pagination size="md" aria-label="Page navigation" style={{
