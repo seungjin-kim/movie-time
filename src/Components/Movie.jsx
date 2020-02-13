@@ -5,7 +5,6 @@ import {
   Row, Col,
 } from "reactstrap";
 
-
 export default class Movie extends React.Component {
   render() {
 
@@ -28,7 +27,6 @@ export default class Movie extends React.Component {
 
           <Col xs="7" style={{
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
           }}>
             <div className="movie-entry media">
@@ -41,9 +39,7 @@ export default class Movie extends React.Component {
                 <p style={{
                   fontStyle: 'italic'
                 }}> Rating: {this.props.movie.rating} </p>
-                <p style={{
-                  textAlign: "left"
-                }}> {this.props.movie.overview} </p>
+                <p> {this.props.movie.overview} </p>
                 <p style={{
                   fontStyle: 'italic'
                 }}> Release Date: {this.props.movie.released} </p>
