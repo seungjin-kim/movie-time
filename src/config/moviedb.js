@@ -1,4 +1,4 @@
-export const MOVIEDB_API_KEY = process.env.MOVIEDB_API_KEY
+export const MOVIEDB_API_KEY = '2f7a36cb00abe191c1429ea9f0be3dc7'
 
 export const baseURL = 'https://api.themoviedb.org/3'
 export const didMountURL = `${baseURL}/trending/movie/week?api_key=${MOVIEDB_API_KEY}`
